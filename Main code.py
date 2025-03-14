@@ -24,8 +24,8 @@ def main():
     test = get_api_url(username)
     if test:
         for event in test:
-            print(event['type'])
-            print(event['url'])
+            print(f"Event: {event['type']}")
+            print(f"URL: {event['repo']['url']}\n")
     else:
         print("No data found")
 
