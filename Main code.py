@@ -1,5 +1,4 @@
 import requests
-import json
 
 # get API URL and do things with it
 # e.g. https://api.github.com/users/kamranahmedse/events
@@ -18,37 +17,28 @@ def get_api_url(username):
 
 
 def collate(events):
-    listed = set(events)
-    for event in listed:
-        count = sum(1 for e in events if e == event)
-        #Had to look this up, but this is a good way of finding out the amount of times 
-        #an even occurs. Now I need to find a way to print this out so that it looks like:
-        # - Pushed 3 commmits to URL.
-        #Hmm
-        print(f"{event}: {count}")
-    
+    event_list = [event[0] for event in events]
+    event_url = [event[1] for event in events]
+
+    for event, url in zip(event_list, event_url):
+        count = sum(1 for e, _ in events if e == event)
+
+        print(f"Created {count} {event} events to {url}")    
 
 
 def main():
-    opening = "Hello, please enter the GitHub Username: "
-    username = input(opening)
+    username = input("Hello, please enter the GitHub Username: ")
     
     test = get_api_url(username)
     if test:
         event_list = [event['type'] for event in test]
-        collate(event_list)
-        
+        event_url = [event['repo']['url'] for event in test]
 
-            #print(f"Event: {event['type']}")
-            #print(f"URL: {event['repo']['url']}\n")
+        merged_list = list(zip(event_list, event_url))
+
+        collate(merged_list)
     else:
         print("No data found")
-
-    # So far, this creates a program that takes a username and returns the events and url of 
-    # the user. This is OK, but I now need to make a list of the things that are happening
-    # and then collate them into a much easier to read format. OK.
-
-
 
 if __name__ == "__main__":
     main()
